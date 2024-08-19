@@ -1,0 +1,22 @@
+{% extends "Base/base.html" %}
+
+{% block content %}
+  <h2>Changer le nom d'utilisateur</h2>
+  <form method="POST">
+    {% csrf_token %}
+    <div class="form-group">
+      <label for="id_username">{{ form.username.label }}</label>
+      {{ form.username }}
+      <small class="form-text text-muted">{{ form.username.help_text }}</small>
+      {% if form.username.errors %}
+          <div class="invalid-feedback">
+              {% for error in form.username.errors %}
+                  <div>{{ error }}</div>
+              {% endfor %}
+          </div>
+      {% endif %}
+  </div>
+    <button type="submit">Sauvegarder les modifications</button>
+  </form>
+{% endblock %}
+</form>

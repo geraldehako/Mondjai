@@ -1,0 +1,281 @@
+{% extends 'Base/base.html' %}
+
+{% block content %}
+ <!-- start page title -->
+ <div class="row">
+    <div class="col-12">
+        <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+            <h4 class="mb-sm-0 font-size-18">KHAGest</h4>
+
+            <div class="page-title-right">
+                <ol class="breadcrumb m-0">
+                    <li class="breadcrumb-item"><a href="javascript: void(0);">Tableau de bord</a></li>
+                    <li class="breadcrumb-item active">Organigramme</li>
+                </ol>
+            </div>
+
+        </div> 
+    </div>
+</div>
+<!-- end page title -->
+
+<div class="row">
+
+    <div class="col-xl-3">
+        <div class="card">
+            <div class="card-body">
+                <!-- Affichage du donut des enseignants par genre -->
+                <div id="donut-enseignants" style="height: 300px; width: 300px;"></div>
+
+                <!-- Script pour créer le graphique -->
+                <script>
+                    // Récupérer les données des enseignants par genre depuis le contexte Django
+                    var maleCount = {{ male_countens }};
+                    var femaleCount = {{ female_countens }};
+
+                    // Créer le graphique en forme de donut
+                    var data = [{
+                        values: [maleCount, femaleCount],
+                        labels: ['Hommes', 'Femmes'],
+                        type: 'pie',
+                        hole: 0.4
+                    }];
+
+                    var layout = {
+                        title: 'Répartition des clients par genre',
+                        height: 300,
+                        width: 300
+                    };
+
+                    Plotly.newPlot('donut-enseignants', data, layout);
+                </script>
+                
+
+            </div>
+        </div>
+    </div> <!-- end col -->
+
+    <div class="col-xl-3">
+        <div class="card">
+            <div class="card-body">
+                
+                        <div id="donut-graph" style="height: 300px; width: 300px;"></div>
+                    
+            
+                <script>
+                    var data = [{
+                        values: [{{ echeances_payees }}, {{ echeances_non_payees }}],
+                        labels: ['Payées', 'Non Payées'],
+                        type: 'pie',
+                        marker: {
+                            colors: ['#827a7b', '#9e0512'] // Remplacez ces couleurs par celles de votre choix
+                        }
+                    }];
+            
+                    var layout = {
+                        title: 'Répartition des échéances payées et non payées',
+                    };
+            
+                    Plotly.newPlot('donut-graph', data, layout);
+                </script>
+                
+
+            </div>
+        </div>
+    </div> <!-- end col -->
+
+    <div class="col-xl-3">
+        <div class="card">
+            <div class="card-body">
+                <div id="donut-transactions" style="height: 300px; width: 300px;"></div>
+
+                <!-- Script pour créer le graphique -->
+                <script>
+                    // Récupérer les données des transactions par type depuis le contexte Django
+                    var depotCount = {{ depot_count }};
+                    var retraitCount = {{ retrait_count }};
+                    var virementCount = {{ virement_count }};
+
+                    // Créer le graphique en forme de donut
+                    var data = [{
+                        values: [depotCount, retraitCount, virementCount],
+                        labels: ['Dépôt', 'Retrait', 'Virement'],
+                        type: 'pie',
+                        marker: {
+                            colors: ['#0a0763', '#9291a3', '#0a0a12'] // Remplacez ces couleurs par celles de votre choix
+                        },
+                        hole: 0.4
+                    }];
+
+                    var layout = {
+                        title: 'RÉPARTITION DES TRANSACTIONS PAR TYPE',
+                        height: 300,
+                        width: 300
+                    };
+
+                    Plotly.newPlot('donut-transactions', data, layout);
+                </script>
+            </div>
+        </div>
+    </div> <!-- end col -->
+
+    <div class="col-xl-3">
+        <div class="card">
+            <div class="card-body">
+                    <!-- Affichage du donut des montants de transactions par type -->
+                <div id="donut-montants" style="height: 300px; width: 300px;"></div>
+
+                <!-- Script pour créer le graphique -->
+                <script>
+                    // Récupérer les données des montants de transactions depuis le contexte Django
+                    var depotAmount = {{ depot_amount }};
+                    var retraitAmount = {{ retrait_amount }};
+                    var virementAmount = {{ virement_amount }};
+
+                    // Créer le graphique en forme de donut
+                    var data = [{
+                        values: [depotAmount, retraitAmount, virementAmount],
+                        labels: ['Dépôt', 'Retrait', 'Virement'],
+                        type: 'pie',
+                        marker: {
+                            colors: ['#702b78', '#b3890b', '#e0d1a2'] // Remplacez ces couleurs par celles de votre choix
+                        },
+                        hole: 0.4
+                    }];
+
+                    var layout = {
+                        title: 'RÉPARTITION DES MONTANTS DE TRANSACTIONS PAR TYPE',
+                        height: 300,
+                        width: 300
+                    };
+
+                    Plotly.newPlot('donut-montants', data, layout);
+                </script>
+            </div>
+        </div>
+    </div> <!-- end col -->
+
+
+</div> <!-- end row -->
+
+<div class="row row-sm">
+    <div class="col-xl-6">
+        <div class="card">
+            <div class="card-body">
+                
+               <!-- Affichage de la courbe des transactions de prêt -->
+                <!-- Div pour afficher le graphique à barres -->
+                <h4>Transactions par type sur les comptes epargnes</h4> 
+                <div>
+                    <canvas id="bar-chart" width="400" height="200"></canvas>
+                </div>
+                
+                <script>
+                    var ctx = document.getElementById('bar-chart').getContext('2d');
+                    var barChart;
+                
+                    // Fonction pour créer le graphique à barres
+                    function createBarChart(data) {
+                        if (barChart) {
+                            barChart.destroy();
+                        }
+                
+                        barChart = new Chart(ctx, {
+                            type: 'bar',
+                            data: {
+                                labels: Object.keys(data),
+                                datasets: [
+                                    { label: 'Dépôt', data: Object.values(data).map(item => item.Depot) },
+                                    { label: 'Retrait', data: Object.values(data).map(item => item.Retrait) },
+                                    { label: 'Virement', data: Object.values(data).map(item => item.Virement) }
+                                ]
+                            },
+                            options: {
+                                scales: {
+                                    y: {
+                                        beginAtZero: true,
+                                        ticks: {
+                                            precision: 0
+                                        }
+                                    }
+                                }
+                            }
+                        });
+                    }
+                
+                    // Charger les données JSON et créer le graphique
+                    var transactionsData = {{ transactions_data | safe }};
+                    createBarChart(transactionsData);
+                </script>
+                
+                
+
+            </div>
+        </div>
+    </div> <!-- end col -->
+    <div class="col-xl-6">
+        <div class="card">
+            <div class="card-body">
+                
+
+                <!-- Créer un élément canvas pour le graphique à barres -->
+                <h4>Transactions par type sur les comptes prets</h4> 
+                <div>
+                    <canvas id="bar-chartp" width="400" height="200"></canvas>
+                </div>
+                
+                <script>
+                    var ctx = document.getElementById('bar-chartp').getContext('2d');
+                    var barChartp;
+                
+                    // Fonction pour créer le graphique à barres
+                    function createBarChart(data) {
+                        if (barChartp) {
+                            barChartp.destroy();
+                        }
+                
+                        barChartp = new Chart(ctx, {
+                            type: 'bar',
+                            
+                            data: {
+                                labels: Object.keys(data),
+                                datasets: [
+                                    { label: 'Échéance',
+                        data: Object.values(data).map(item => item.Depot),
+                        backgroundColor: 'rgba(255, 0, 0, 0.6)', // Couleur rouge avec opacité
+                        borderColor: 'rgba(255, 0, 0, 1)', // Couleur bordure
+                        borderWidth: 1
+                    }
+                                ]
+                            },
+                            options: {
+                                scales: {
+                                    y: {
+                                        beginAtZero: true,
+                                        ticks: {
+                                            precision: 0
+                                        }
+                                    }
+                                }
+                            }
+                        });
+                    }
+                
+                    // Charger les données JSON et créer le graphique
+                    var transactionsData = {{ transactions_pret_data | safe }};
+                    createBarChart(transactionsData);
+                </script>
+                
+
+    
+
+    
+
+
+
+            </div>
+        </div>
+    </div> <!-- end col -->
+</div>
+
+{% endblock content %}

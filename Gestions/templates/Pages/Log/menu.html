@@ -1,0 +1,137 @@
+<!doctype html>
+{% load static %}
+<html lang="en">
+
+    <head>
+        
+        <meta charset="utf-8" />
+        <title>KHA | Administration</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta content="Premium Multipurpose Admin & Dashboard Template" name="description" />
+        <meta content="Themesbrand" name="author" />
+        <!-- App favicon -->
+        <link rel="shortcut icon" href="{% static 'assets/images/kha.png' %}">
+        <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+        <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+
+        <!-- Bootstrap Css -->
+        <link href="{% static 'assets/css/bootstrap.min.css' %}" id="bootstrap-style" rel="stylesheet" type="text/css" />
+        <!-- Icons Css -->
+        <link href="{% static 'assets/css/icons.min.css' %}" rel="stylesheet" type="text/css" />
+        <!-- App Css-->
+        <link href="{% static 'assets/css/app.min.css' %}" id="app-style" rel="stylesheet" type="text/css" />
+        <style>
+            .dark-orange-bg {
+              background-color: #233d4d; /* Utilisation d'une valeur hexadécimale pour un orange foncé */
+            }
+            .dark-vert-bg {
+              background-color: #f9c4d2; /* Utilisation d'une valeur hexadécimale pour un orange foncé */
+            }
+
+          </style>
+          
+
+    </head>
+
+    {% block content %}
+    <body>
+        <div class="home-btn d-none d-sm-block">
+            
+            <div class="dropdown d-inline-block">
+                {% if user.is_authenticated %}
+                    {% csrf_token %}
+                <button type="button" class="btn header-item waves-effect" id="page-header-user-dropdown"
+                    data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    {% if user.profile_photo %}<img class="rounded-circle header-profile-user" src="{{ user.profile_photo.url }} "
+                        alt="">{% endif %}
+                    <span class="d-none d-xl-inline-block ms-1" key="t-henry">{{ user.username }}</span>
+                    <i class="mdi mdi-chevron-down d-none d-xl-inline-block"></i>
+                </button>
+                <div class="dropdown-menu dropdown-menu-end">
+                    <!-- item-->
+                    
+                    <a class="dropdown-item" href="#"><i class="bx bx-user font-size-16 align-middle me-1"></i> <span key="t-profile">Profil</span></a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item text-danger" href="{% url 'signup' %}"><i class="bx bx-power-off font-size-16 align-middle me-1 text-danger"></i> <span key="t-logout">Déconnection</span></a>
+                    
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <section class="my-5 pt-sm-5">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12 text-center">
+                        <div class="home-wrapper">
+                            <div class="mb-5">
+                                <a href="" class="d-block auth-logo">
+                                    <img src="{% static 'assets/images/Capkha.png' %}" alt="" height="20" class="auth-logo-dark mx-auto">
+                                    <img src="{% static 'assets/images/Capkha.png' %}" alt="" height="20" class="auth-logo-light mx-auto">
+                                </a>
+                            </div>
+                            
+
+                            <div class="row justify-content-center"> 
+                                <div class="col-sm-4">
+                                    <div class="maintenance-img">
+                                        <img src="{% static 'assets/images/kha.png' %}" alt="" class="img-fluid mx-auto d-block">
+                                    </div>
+                                </div>
+                            </div>
+                            <h3 class="mt-5">Le plateforme est active</h3>
+                            <p>Veuillez sélectionner un module</p>
+
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="card mt-4 maintenance-box dark-orange-bg">
+                                        <div class="card-body">
+                                            <a href="{% url 'liste_clients' %}" class="px-3 py-2 rounded bg-light bg-opacity-50 d-block mb-2"><b>Gestion Clientèle</b> </a>
+                                            <h5 class="font-size-15 text-uppercase">POURQUOI ?</h5>
+                                            <p class="text-muted mb-0">Suivi des clients</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="card mt-4 maintenance-box">
+                                        <div class="card-body">
+                                            <a href="{% url 'liste_abonnements' %}" class="px-3 py-2 rounded bg-light bg-opacity-50 d-block mb-2"><b>Gestion Finance</b> </a>
+                                            <h5 class="font-size-15 text-uppercase">
+                                                POURQUOI ?</h5>
+                                            <p class="text-muted mb-0">Suivi des abonnements</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="card mt-4 maintenance-box dark-vert-bg">
+                                        <div class="card-body">
+                                            <a href="{% url 'liste_gestionnaires' %}" class="px-3 py-2 rounded bg-light bg-opacity-50 d-block mb-2"><b>Ressource humaine</b> </a>
+                                            <h5 class="font-size-15 text-uppercase">
+                                                POURQUOI ?</h5>
+                                            <p class="text-muted mb-0">Recrutement des agents</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- end row -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        
+        <!-- JAVASCRIPT -->
+        <script src="{% static 'assets/libs/jquery/jquery.min.js' %}"></script>
+        <script src="{% static 'assets/libs/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+        <script src="{% static 'assets/libs/metismenu/metisMenu.min.js' %}"></script>
+        <script src="{% static 'assets/libs/simplebar/simplebar.min.js' %}"></script>
+        <script src="{% static 'assets/libs/node-waves/waves.min.js' %}"></script>
+
+        
+
+    </body>
+</html>
+
+{% endblock content %}

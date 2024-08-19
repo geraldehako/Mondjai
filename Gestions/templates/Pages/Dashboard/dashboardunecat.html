@@ -1,0 +1,184 @@
+{% extends 'Base/base.html' %}
+
+{% block content %}
+<!-- start page title -->
+<div class="row">
+    <div class="col-12">
+        <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+            <h4 class="mb-sm-0 font-size-18">KHAGest</h4>
+            <div class="page-title-right">
+                <ol class="breadcrumb m-0">
+                    <li class="breadcrumb-item"><a href="javascript: void(0);">Tableau de bord</a></li>
+                    <li class="breadcrumb-item active">Organigramme</li>
+                </ol>
+            </div>
+        </div> 
+    </div>
+</div>
+<!-- end page title -->
+
+<div class="row">
+    <div class="col-xl-3">
+        <div class="card">
+            <div class="card-body">
+                <div id="donut-enseignants" style="height: 300px; width: 300px;"></div>
+                <script>
+                    var maleCount = {{ male_countens }};
+                    var femaleCount = {{ female_countens }};
+                    var data = [{
+                        values: [maleCount, femaleCount],
+                        labels: ['Hommes', 'Femmes'],
+                        type: 'pie',
+                        hole: 0.4
+                    }];
+                    var layout = {
+                        title: 'Répartition des clients par genre',
+                        height: 300,
+                        width: 300
+                    };
+                    Plotly.newPlot('donut-enseignants', data, layout);
+                </script>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-3">
+        <div class="card">
+            <div class="card-body">
+                <div id="donut-graph" style="height: 300px; width: 300px;"></div>
+                <script>
+                    var data = [{
+                        values: [{{ echeances_payees }}, {{ echeances_non_payees }}],
+                        labels: ['Payées', 'Non Payées'],
+                        type: 'pie',
+                        marker: { colors: ['#827a7b', '#9e0512'] }
+                    }];
+                    var layout = {
+                        title: 'Répartition des échéances payées et non payées',
+                    };
+                    Plotly.newPlot('donut-graph', data, layout);
+                </script>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-3">
+        <div class="card">
+            <div class="card-body">
+                <div id="donut-transactions" style="height: 300px; width: 300px;"></div>
+                <script>
+                    var depotCount = {{ depot_count }};
+                    var retraitCount = {{ retrait_count }};
+                    var data = [{
+                        values: [depotCount, retraitCount],
+                        labels: ['Dépôt', 'Retrait'],
+                        type: 'pie',
+                        marker: { colors: ['#0a0763', '#9291a3'] },
+                        hole: 0.4
+                    }];
+                    var layout = {
+                        title: 'Répartition des transactions par type',
+                        height: 300,
+                        width: 300
+                    };
+                    Plotly.newPlot('donut-transactions', data, layout);
+                </script>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-3">
+        <div class="card">
+            <div class="card-body">
+                <div id="donut-montants" style="height: 300px; width: 300px;"></div>
+                <script>
+                    var depotAmount = {{ depot_amount }};
+                    var retraitAmount = {{ retrait_amount }};
+                    var data = [{
+                        values: [depotAmount, retraitAmount],
+                        labels: ['Dépôt', 'Retrait'],
+                        type: 'pie',
+                        marker: { colors: ['#702b78', '#b3890b'] },
+                        hole: 0.4
+                    }];
+                    var layout = {
+                        title: 'Répartition des montants de transactions par type',
+                        height: 300,
+                        width: 300
+                    };
+                    Plotly.newPlot('donut-montants', data, layout);
+                </script>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row row-sm">
+    <div class="col-xl-6">
+        <div class="card">
+            <div class="card-body">
+                <h4>Transactions par type sur les comptes épargnes</h4>
+                <div>
+                    <canvas id="bar-chart" width="400" height="200"></canvas>
+                </div>
+                <script>
+                    var ctx = document.getElementById('bar-chart').getContext('2d');
+                    var transactionsData = {{ transactions_data | safe }};
+                    new Chart(ctx, {
+                        type: 'bar',
+                        data: {
+                            labels: Object.keys(transactionsData),
+                            datasets: Object.keys(transactionsData[Object.keys(transactionsData)[0]]).map(categorie => ({
+                                label: categorie,
+                                data: Object.values(transactionsData).map(item => item[categorie] || 0)
+                            }))
+                        },
+                        options: {
+                            scales: {
+                                y: {
+                                    beginAtZero: true,
+                                    ticks: { precision: 0 }
+                                }
+                            }
+                        }
+                    });
+                </script>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-6">
+        <div class="card">
+            <div class="card-body">
+                <h4>Transactions des depenses</h4>
+                <div>
+                    <canvas id="bar-chartp" width="400" height="200"></canvas>
+                </div>
+                <script>
+                    var ctx = document.getElementById('bar-chartp').getContext('2d');
+                    var transactionsPretData = {{ transactions_pret_data | safe }};
+                    new Chart(ctx, {
+                        type: 'bar',
+                        data: {
+                            labels: Object.keys(transactionsPretData),
+                            datasets: Object.keys(transactionsPretData[Object.keys(transactionsPretData)[0]]).map(categorie => ({
+                                label: categorie,
+                                data: Object.values(transactionsPretData).map(item => item[categorie] || 0)
+                            }))
+                        },
+                        options: {
+                            scales: {
+                                y: {
+                                    beginAtZero: true,
+                                    ticks: { precision: 0 }
+                                }
+                            }
+                        }
+                    });
+                </script>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

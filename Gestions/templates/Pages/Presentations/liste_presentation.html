@@ -1,0 +1,89 @@
+{% extends 'Base/base.html' %}
+
+{% block content %}
+{% load static %}
+ <!-- start page title -->
+<div class="row">
+    <div class="col-12">
+        <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+            <h4 class="mb-sm-0 font-size-18">Mondjai</h4>
+
+            <div class="page-title-right">
+                <ol class="breadcrumb m-0">
+                    <li class="breadcrumb-item"><a href="{% url 'courbe_transactions' %}">Tableau de bord</a></li>
+                    <li class="breadcrumb-item active">liste presentation</li>
+                </ol>
+            </div>
+
+        </div>
+    </div>
+</div>
+<!-- end page title -->
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+
+                <div class="row">
+                    <div class="col-6 d-flex align-items-center">
+                      <h6 class="mb-0">Consulter la liste des presentations</h6>
+                    </div>
+                    <div class="col-6 text-end">
+                        <a class="btn btn-danger waves-effect waves-light" href="{% url 'create_presentation' %}"><iconify-icon icon="mdi:content-save-plus"></iconify-icon>  Client</a> 
+                    </div>
+                </div>
+                <br><br>
+                  <table id="datatable-buttons" class="table table-bordered dt-responsive nowrap w-100">
+                    <thead class="table-light">
+            <tr>
+                <th>logo</th>
+                <th>contact</th>
+                <th>presentation_text</th>
+                <th>welcome_message</th>
+                <th>video_url</th>
+                <th width="30">Tâches</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for present in presents %}
+            <tr>
+                <td>
+                                
+                    {% if et.Logo %}
+                        <img class="rounded-circle avatar-xs" src="{{ present.logo.url }}" alt="{{ present.contact }}">
+                    {% else %}
+                        <img class="rounded-circle avatar-xs" src="{% static 'assets/images/avatar.jpg' %}" alt="{{ present.contact }}">
+                    {% endif %}
+                </td>
+                <td>{{ present.contact }}</td>
+                <td>{{ present.presentation_text }}</td>
+                <td>{{ present.welcome_message }}</td>
+                <td>{{ present.video_url }}</td>
+                <td> 
+                    <div class="btn-group"> 
+                        <button class="btn btn-secondary btn-sm" type="button">
+                            Actions
+                        </button>
+                        <button type="button" class="btn btn-sm btn-secondary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
+                            <iconify-icon icon="mdi:chevron-down-circle"></iconify-icon>
+                        </button>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" href="{% url 'modifier_presentation' pk=present.id %}">Modifier</a>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="3">Aucune donnée disponible.</td>
+            </tr>
+            {% endfor %} 
+        </tbody>
+    </table>
+
+
+</div>
+</div>
+</div> <!-- end col -->
+</div> <!-- end row -->
+{% endblock content %}

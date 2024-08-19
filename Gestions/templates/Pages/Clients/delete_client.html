@@ -1,0 +1,41 @@
+{% extends 'Base/base.html' %}
+
+{% block content %}
+ <!-- start page title -->
+<div class="row">
+    <div class="col-12">
+        <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+            <h4 class="mb-sm-0 font-size-18">Mondjai</h4>
+
+            <div class="page-title-right">
+                <ol class="breadcrumb m-0">
+                    <li class="breadcrumb-item"><a href="">Tableau de bord</a></li>
+                    <li class="breadcrumb-item active">Abonnements</li>
+                </ol>
+            </div>
+
+        </div>
+    </div>
+</div>
+<!-- end page title -->
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <h1>Supprimer le client</h1>
+                <p>Êtes-vous sûr de vouloir supprimer {{ utilisateur.first_name }} {{ utilisateur.last_name }} ?</p>
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="mt-4 hstack gap-2">
+                        <button type="submit" class="btn btn-soft-danger w-100">Confirmer la suppression</button>
+                        <a class="btn btn-soft-primary w-100" href="{% url 'liste_clients' %}">Retour</a>
+                    </div>
+                   
+                </form>
+                
+            </div>
+        </div> 
+    </div> <!-- end col -->
+</div> <!-- end row -->
+{% endblock content %}
+

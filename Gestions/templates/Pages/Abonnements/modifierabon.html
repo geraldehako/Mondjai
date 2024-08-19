@@ -1,0 +1,50 @@
+{% extends 'Base/base.html' %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+            <h4 class="mb-sm-0 font-size-18">Modifier un Abonnements</h4>
+            <div class="page-title-right">
+                <ol class="breadcrumb m-0">
+                    <li class="breadcrumb-item"><a href="{% url 'liste_abonnements' %}">Abonnements</a></li>
+                    <li class="breadcrumb-item active">Créer</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xl-12">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title mb-4">Formulaire de modification</h4>
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">date_debut</label>
+                                    {{ form.date_debut }}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">date_fin</label>
+                                    {{ form.date_fin }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-4 hstack gap-2">
+                        <button type="submit" class="btn btn-soft-success w-100">Valider</button>
+                        <a class="btn btn-soft-primary w-100" href="{% url 'liste_abonnements' %}">Retour</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}

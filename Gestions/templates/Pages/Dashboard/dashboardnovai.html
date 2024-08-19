@@ -1,0 +1,183 @@
+{% extends 'Base/base.html' %}
+
+{% block content %}
+<!-- start page title -->
+<div class="row">
+    <div class="col-12">
+        <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+            <h4 class="mb-sm-0 font-size-18">KHAGest</h4>
+            <div class="page-title-right">
+                <ol class="breadcrumb m-0">
+                    <li class="breadcrumb-item"><a href="javascript: void(0);">Tableau de bord</a></li>
+                    <li class="breadcrumb-item active">Organigramme</li>
+                </ol>
+            </div>
+        </div> 
+    </div>
+</div>
+<!-- end page title -->
+
+<div class="row">
+    <!-- Répartition des clients par genre -->
+    <div class="col-xl-3">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Répartition des clients par genre</h5>
+                <div id="donut-enseignants" style="height: 300px; width: 300px;"></div>
+                <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+                <script>
+                    var maleCount = {{ male_countens }};
+                    var femaleCount = {{ female_countens }};
+                    var data = [{
+                        values: [maleCount, femaleCount],
+                        labels: ['Hommes', 'Femmes'],
+                        type: 'pie',
+                        hole: 0.4
+                    }];
+                    var layout = {
+                        title: 'Répartition des clients par genre',
+                        height: 300,
+                        width: 300
+                    };
+                    Plotly.newPlot('donut-enseignants', data, layout);
+                </script>
+            </div>
+        </div>
+    </div>
+
+    <!-- Répartition des échéances payées et non payées -->
+    <div class="col-xl-3">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Répartition des échéances</h5>
+                <div id="donut-echances" style="height: 300px; width: 300px;"></div>
+                <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+                <script>
+                    var echeancesPayees = {{ echeances_payees }};
+                    var echeancesNonPayees = {{ echeances_non_payees }};
+                    var data = [{
+                        values: [echeancesPayees, echeancesNonPayees],
+                        labels: ['Payées', 'Non Payées'],
+                        type: 'pie',
+                        marker: {
+                            colors: ['#827a7b', '#9e0512']
+                        }
+                    }];
+                    var layout = {
+                        title: 'Répartition des échéances',
+                        height: 300,
+                        width: 300
+                    };
+                    Plotly.newPlot('donut-echances', data, layout);
+                </script>
+            </div>
+        </div>
+    </div>
+
+    <!-- Répartition des montants des transactions -->
+    <div class="col-xl-3">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Montants des transactions</h5>
+                <div id="donut-transactions" style="height: 300px; width: 300px;"></div>
+                <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+                <script>
+                    var depotAmount = {{ depot_amount }};
+                    var retraitAmount = {{ retrait_amount }};
+                    var data = [{
+                        values: [depotAmount, retraitAmount],
+                        labels: ['Dépôt', 'Retrait'],
+                        type: 'pie',
+                        marker: {
+                            colors: ['#0a0763', '#9291a3']
+                        },
+                        hole: 0.4
+                    }];
+                    var layout = {
+                        title: 'Montants des transactions',
+                        height: 300,
+                        width: 300
+                    };
+                    Plotly.newPlot('donut-transactions', data, layout);
+                </script>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Transactions par catégorie sur les comptes épargnes -->
+    <div class="col-xl-6">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Transactions par catégorie (Comptes Épargne)</h4>
+                <canvas id="bar-chart-entree" width="400" height="200"></canvas>
+                <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+                <script>
+                    var ctxEntree = document.getElementById('bar-chart-entree').getContext('2d');
+                    var barChartEntree = new Chart(ctxEntree, {
+                        type: 'bar',
+                        data: {
+                            labels: {{ transactions_entree_data.keys|safe }},
+                            datasets: [{
+                                label: 'Montant',
+                                data: {{ transactions_entree_data.values|safe }},
+                                backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                                borderColor: 'rgba(54, 162, 235, 1)',
+                                borderWidth: 1
+                            }]
+                        },
+                        options: {
+                            scales: {
+                                y: {
+                                    beginAtZero: true,
+                                    ticks: {
+                                        precision: 0
+                                    }
+                                }
+                            }
+                        }
+                    });
+                </script>
+            </div>
+        </div>
+    </div>
+
+    <!-- Transactions par catégorie sur les comptes prêts -->
+    <div class="col-xl-6">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Transactions par catégorie (Comptes Prêts)</h4>
+                <canvas id="bar-chart-depense" width="400" height="200"></canvas>
+                <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+                <script>
+                    var ctxDepense = document.getElementById('bar-chart-depense').getContext('2d');
+                    var barChartDepense = new Chart(ctxDepense, {
+                        type: 'bar',
+                        data: {
+                            labels: {{ transactions_depense_data.keys|safe }},
+                            datasets: [{
+                                label: 'Montant',
+                                data: {{ transactions_depense_data.values|safe }},
+                                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                                borderColor: 'rgba(75, 192, 192, 1)',
+                                borderWidth: 1
+                            }]
+                        },
+                        options: {
+                            scales: {
+                                y: {
+                                    beginAtZero: true,
+                                    ticks: {
+                                        precision: 0
+                                    }
+                                }
+                            }
+                        }
+                    });
+                </script>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
